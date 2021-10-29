@@ -85,6 +85,10 @@ public class RegistrationPreviewController extends BaseController implements Ini
 		Image backImage = new Image(getClass().getResourceAsStream(RegistrationConstants.BACK));
 
 		backBtn.hoverProperty().addListener((ov, oldValue, newValue) -> {
+			//INFO fixed null pointer
+			if(backImageView == null){
+				backImageView = new ImageView();
+			}
 			if (newValue) {
 				backImageView.setImage(backInWhite);
 			} else {
@@ -92,10 +96,10 @@ public class RegistrationPreviewController extends BaseController implements Ini
 			}
 		});
 
-		nextButton.setDisable(true);
+		nextButton.setDisable(false);
 
-		String key = RegistrationConstants.REG_CONSENT + applicationContext.getApplicationLanguage();
-		consentText = getValueFromApplicationContext(key);
+//		String key = RegistrationConstants.REG_CONSENT + applicationContext.getApplicationLanguage();
+//		consentText = getValueFromApplicationContext(key);
 
 		if (getRegistrationDTOFromSession() != null && getRegistrationDTOFromSession().getSelectionListDTO() != null) {
 
@@ -167,7 +171,6 @@ public class RegistrationPreviewController extends BaseController implements Ini
 	public void goToNextPage(ActionEvent event) {
 		auditFactory.audit(AuditEvent.REG_PREVIEW_SUBMIT, Components.REG_PREVIEW, SessionContext.userId(),
 				AuditReferenceIdTypes.USER_ID.getReferenceTypeId());
-		if (getRegistrationDTOFromSession().getRegistrationMetaDataDTO().getConsentOfApplicant() != null) {
 			if (getRegistrationDTOFromSession().getSelectionListDTO() != null) {
 				SessionContext.map().put(RegistrationConstants.UIN_UPDATE_REGISTRATIONPREVIEW, false);
 				SessionContext.map().put(RegistrationConstants.UIN_UPDATE_OPERATORAUTHENTICATIONPANE, true);
@@ -177,9 +180,6 @@ public class RegistrationPreviewController extends BaseController implements Ini
 						getPageByAction(RegistrationConstants.REGISTRATION_PREVIEW, RegistrationConstants.NEXT));
 			}
 			registrationController.goToAuthenticationPage();
-		} else {
-			nextButton.setDisable(false);
-		}
 	}
 
 	public void setUpPreviewContent() {
@@ -194,7 +194,7 @@ public class RegistrationPreviewController extends BaseController implements Ini
 			}
 
 			if (ackTemplateText != null && !ackTemplateText.isEmpty()) {
-				templateGenerator.setConsentText(consentText);
+//					templateGenerator.setConsentText(consentText);
 				ResponseDTO templateResponse = templateGenerator.generateTemplate(ackTemplateText,
 						getRegistrationDTOFromSession(), templateManagerBuilder,
 						RegistrationConstants.TEMPLATE_PREVIEW);
@@ -228,20 +228,25 @@ public class RegistrationPreviewController extends BaseController implements Ini
 			return;
 		}
 
-		Element yes = document.getElementById(RegistrationConstants.REG_CONSENT_YES);
-		Element no = document.getElementById(RegistrationConstants.REG_CONSENT_NO);
-		((EventTarget) yes).addEventListener(RegistrationConstants.CLICK, event -> enableConsent(), false);
-		((EventTarget) no).addEventListener(RegistrationConstants.CLICK, event -> disableConsent(), false);
+//		Element yes = document.getElementById(RegistrationConstants.REG_CONSENT_YES);
+//		Element no = document.getElementById(RegistrationConstants.REG_CONSENT_NO);
+//		((EventTarget) yes).addEventListener(RegistrationConstants.CLICK, event -> enableConsent(), false);
+//		((EventTarget) no).addEventListener(RegistrationConstants.CLICK, event -> disableConsent(), false);
 
 		List<String> modifyElements = new ArrayList<>();
 		modifyElements.add(RegistrationConstants.MODIFY_DEMO_INFO);
+		modifyElements.add(RegistrationConstants.MODIFY_ADDRESS_INFO);
+		modifyElements.add(RegistrationConstants.MODIFY_GUARDIAN_INFO);
 		modifyElements.add(RegistrationConstants.MODIFY_DOCUMENTS);
 		modifyElements.add(RegistrationConstants.MODIFY_BIOMETRICS);
 		for (String element : modifyElements) {
 			Element button = document.getElementById(element);
+			if(button != null)
+			{
 			((EventTarget) button).addEventListener(RegistrationConstants.CLICK, event -> modifyElement(element),
 					false);
 		}
+	}
 	}
 
 	private void modifyElement(String element) {
@@ -254,6 +259,10 @@ public class RegistrationPreviewController extends BaseController implements Ini
 			modifyDocuments();
 		} else if (element.equals(RegistrationConstants.MODIFY_BIOMETRICS)) {
 			modifyBiometrics();
+		}else if (element.equals(RegistrationConstants.MODIFY_ADDRESS_INFO)) {
+			modifyDemographicInfo();
+	   	}else if (element.equals(RegistrationConstants.MODIFY_GUARDIAN_INFO)) {
+			modifyDemographicInfo();
 		}
 	}
 

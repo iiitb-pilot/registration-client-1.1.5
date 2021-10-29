@@ -117,7 +117,7 @@ public class DemographicDetailController extends BaseController {
 	private DemographicChangeActionHandler demographicChangeActionHandler;
 
 	@FXML
-	private FlowPane parentFlowPane;
+	private GridPane parentFlowPane;
 	@FXML
 	private GridPane scrollParentPane;
 	@FXML
@@ -130,8 +130,8 @@ public class DemographicDetailController extends BaseController {
 	private AnchorPane keyboardPane;
 	@FXML
 	public TextField preRegistrationId;
-	@FXML
-	public Label languageLabelLocalLanguage;
+//	@FXML
+//	public Label languageLabelLocalLanguage;
 
 	private boolean isChild;
 	private Node keyboardNode;
@@ -182,10 +182,12 @@ public class DemographicDetailController extends BaseController {
 
 		ResourceBundle localProperties = ApplicationContext.localLanguageProperty();
 
+/*
 		String localLanguageTextVal = isLocalLanguageAvailable() && !isAppLangAndLocalLangSame()
 				? localProperties.getString("language")
 				: RegistrationConstants.EMPTY;
 		languageLabelLocalLanguage.setText(localLanguageTextVal);
+*/
 
 		if (isLocalLanguageAvailable() && !isAppLangAndLocalLangSame()) {
 			vk = VirtualKeyboard.getInstance();
@@ -228,14 +230,14 @@ public class DemographicDetailController extends BaseController {
 			for (Entry<String, List<UiSchemaDTO>> templateGroupEntry : templateGroup.entrySet()) {
 
 				List<UiSchemaDTO> list = templateGroupEntry.getValue();
-				if (list.size() <= 4) {
-					addGroupInUI(list, position, templateGroupEntry.getKey() + position);
+				if (list.size() <= 2) {
+					addGroupInUI(list, position, templateGroupEntry.getKey() + position, templateGroupEntry.getKey());
 				} else {
-					for (int index = 0; index <= list.size() / 4; index++) {
+					for (int index = 0; index <= list.size() / 2; index++) {
 
-						int toIndex = ((index * 4) + 3) <= list.size() - 1 ? ((index * 4) + 4) : list.size();
-						List<UiSchemaDTO> subList = list.subList(index * 4, toIndex);
-						addGroupInUI(subList, position, templateGroupEntry.getKey() + position);
+						int toIndex = ((index * 2) + 1) <= list.size() - 1 ? ((index * 2) + 2) : list.size();
+						List<UiSchemaDTO> subList = list.subList(index * 2, toIndex);
+						addGroupInUI(subList, position, templateGroupEntry.getKey() + position, templateGroupEntry.getKey());
 					}
 				}
 			}
@@ -280,12 +282,35 @@ public class DemographicDetailController extends BaseController {
 		}
 	}
 
-	private void addGroupInUI(List subList, int position, String gridPaneId) {
+	private void addGroupInUI(List subList, int position, String gridPaneId, String templateName) {
 		GridPane groupGridPane = new GridPane();
 		groupGridPane.setId(gridPaneId);
 
 		addGroupContent(subList, groupGridPane);
-		parentFlowPane.getChildren().add(groupGridPane);
+
+		String templateId = templateName.replaceAll(" ", "")+"_layout";
+		GridPane templatePane = (GridPane) parentFlowPane.lookup("#"+templateId);
+		System.out.println(parentFlowPane.lookup("#"+templateId));
+		if (templatePane == null){
+			templatePane = new GridPane();
+			templatePane.setId(templateId);
+			templatePane.getStyleClass().add("preRegParentPaneSection");
+			templatePane.setPadding(new Insets(20, 0, 20, 0));
+			int rowCount = parentFlowPane.getRowCount();
+			parentFlowPane.addRow(rowCount);
+			parentFlowPane.add(templatePane, 1, rowCount);
+			parentFlowPane.setMargin( templatePane, new Insets( 10, 0, 0, 0 ) );
+
+			/* Adding label */
+			Label label = new Label(templateName);
+			label.getStyleClass().add("demoGraphicCustomLabel");
+			label.setPadding(new Insets(0, 0, 10, 55));
+			label.setPrefWidth(1200);
+			templatePane.add(label, 0, 0);
+		}
+		int childs = templatePane.getRowCount();
+		templatePane.add(groupGridPane, 0, childs);
+
 
 		//parentFlow.add(groupGridPane);
 		//position++;
@@ -624,6 +649,11 @@ public class DemographicDetailController extends BaseController {
 
 	public VBox addContentWithTextField(UiSchemaDTO schema, String fieldName, String languageType) {
 		TextField field = new TextField();
+		field.setTextFormatter(new TextFormatter<>((object) -> {
+			object.setText(object.getText().toUpperCase());
+			return object;
+		}));
+
 		Label label = new Label();
 		Label validationMessage = new Label();
 
@@ -775,6 +805,7 @@ public class DemographicDetailController extends BaseController {
 
 	public <T> VBox addContentWithComboBoxObject(String fieldName, UiSchemaDTO schema, String languageType) {
 		ComboBox<GenericDto> field = new ComboBox<GenericDto>();
+		field.setMaxSize(500, 30);
 		Label label = new Label();
 		Label validationMessage = new Label();
 		StringConverter<T> uiRenderForComboBox = fxUtils.getStringConverterForComboBox();
@@ -1629,6 +1660,13 @@ public class DemographicDetailController extends BaseController {
 				else
 					fxUtils.setTextValidLabel(parentFlowPane, (TextField) localField);
 			}
+		} else if (field instanceof  ComboBox) {
+			LOGGER.debug(loggerClassName, APPLICATION_NAME, RegistrationConstants.APPLICATION_ID,
+					"validating combobox field");
+			if (isSelectionValid((ComboBox) field, field.getId())) {
+				clearAlert(parentFlowPane, field.getId());
+				return true;
+			}
 		}
 		return true;
 	}
@@ -1708,6 +1746,10 @@ public class DemographicDetailController extends BaseController {
 
 	private boolean isInputTextValid(TextField textField, String id) {
 		return validation.validateTextField(parentFlowPane, textField, id, true);
+	}
+
+	private boolean isSelectionValid(ComboBox comboField, String id) {
+		return validation.validateTheNode(parentFlowPane, comboField, id, true);
 	}
 
 	private void setSecondaryLangText(TextField primaryField, TextField secondaryField, boolean haveToTransliterate) {

@@ -706,6 +706,8 @@ public class RegistrationConstants {
 	public static final String TEMPLATE_APPLICANT_NAME_SECONDARY_VALUE = "NameSecValue";
 
 	public static final String MODIFY_DEMO_INFO = "modifyDemographicInfo";
+	public static final String MODIFY_ADDRESS_INFO = "modifyAddressInfo";
+	public static final String MODIFY_GUARDIAN_INFO = "modifyGuardianInfo";
 	public static final String MODIFY_DOCUMENTS = "modifyDocuments";
 	public static final String MODIFY_BIOMETRICS = "modifyBiometrics";
 	public static final String CLICK = "click";

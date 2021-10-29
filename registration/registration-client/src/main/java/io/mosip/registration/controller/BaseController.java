@@ -537,6 +537,35 @@ public class BaseController {
 	}
 
 	/**
+	 * Alert clear with specified context.
+	 *
+	 * @param parentPane the parent pane
+	 * @param id         the id
+	 * @param context    alert context
+	 */
+	protected void clearAlert(Pane parentPane, String id) {
+		String type = "#TYPE#";
+		if (id.contains(RegistrationConstants.ONTYPE)) {
+			id = id.replaceAll(RegistrationConstants.UNDER_SCORE + RegistrationConstants.ONTYPE,
+					RegistrationConstants.EMPTY);
+		}
+
+		String[] parts = id.split("__");
+		if (parts.length > 1 && parts[1].matches(RegistrationConstants.DTAE_MONTH_YEAR_REGEX)) {
+			id = parts[0] + "__" + RegistrationConstants.DOB;
+			parentPane = (Pane) parentPane.getParent().getParent();
+		}
+		Label label = ((Label) (parentPane.lookup(RegistrationConstants.HASH + id + RegistrationConstants.MESSAGE)));
+		if (label != null) {
+			if (!(label.isVisible() && id.equals(RegistrationConstants.DOB))) {
+				label.setText(null);
+			}
+
+			label.setTooltip(null);
+		}
+	}
+
+	/**
 	 * Validate sync status.
 	 *
 	 * @return the response DTO

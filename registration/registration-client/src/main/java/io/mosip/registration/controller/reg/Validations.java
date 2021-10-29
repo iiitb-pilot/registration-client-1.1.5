@@ -532,6 +532,7 @@ public class Validations extends BaseController {
 							node.getStyleClass().add("demographicCombobox");
 						}
 					} else {
+						clearAlert(parentPane, id);
 						node.getStyleClass().removeIf((s) -> {
 							return s.equals("demographicComboboxFocused");
 						});
