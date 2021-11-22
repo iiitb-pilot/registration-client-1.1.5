@@ -697,7 +697,7 @@ public class RegistrationConstants {
 	public static final String PARENT_IMAGE_SOURCE = "ParentImageSource";
 	public static final String LIST_ITEM_OPENING_TAG = "<li><span>";
 	public static final String LIST_ITEM_CLOSING_TAG = "</span></li><br/>";
-	public static final String SPLIT_DELIMITOR = "\\.";
+	public static final String SPLIT_DELIMITOR = "~";
 	public static final String TEMPLATE_GUIDELINES = "Guidelines";
 	public static final String TEMPLATE_IS_UIN_UPDATE = "IsUINUpdate";
 	public static final String TEMPLATE_APPLICANT_NAME_PRIMARY_LABEL = "NamePrimLabel";
