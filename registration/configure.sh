@@ -45,6 +45,14 @@ else
 	wget "${artifactory_url}/artifactory/libs-release-local/mock-sdk/1.1.5/mock-sdk.jar" -O /sdkjars/mock-sdk.jar
 fi
 
+
+wget "${artifactory_url}/artifactory/libs-release-local/tech5/ABISTech5FaceSDKAdapter.jar" -O "${work_dir}"/registration-client/target/lib/ABISTech5FaceSDKAdapter.jar
+wget "${artifactory_url}/artifactory/libs-release-local/tech5/Tech5-winSdk-Prod-v1.1.jar" -O "${work_dir}"/registration-client/target/lib/Tech5-winSdk-Prod-v1.1.jar
+wget "${artifactory_url}/artifactory/libs-release-local/tech5/client.jar" -O "${work_dir}"/registration-client/target/lib/client.jar
+wget "${artifactory_url}/artifactory/libs-release-local/tech5/common.jar" -O "${work_dir}"/registration-client/target/lib/common.jar
+wget "${artifactory_url}/artifactory/libs-release-local/tech5/irisSDK1_0.jar" -O "${work_dir}"/registration-client/target/lib/irisSDK1_0.jar
+wget "${artifactory_url}/artifactory/libs-release-local/tech5/morena_license.jar" -O "${work_dir}"/registration-client/target/lib/morena_license.jar
+
 #unzip Jre to be bundled
 /usr/bin/unzip /zulu11.41.23-ca-fx-jre11.0.8-win_x64.zip
 mkdir -p /registration-libs/resources/jre
