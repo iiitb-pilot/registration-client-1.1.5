@@ -47,7 +47,7 @@ fi
 
 
 wget "${artifactory_url}/artifactory/libs-release-local/tech5/ABISTech5FaceSDKAdapter.jar" -O "${work_dir}"/registration-client/target/lib/ABISTech5FaceSDKAdapter.jar
-wget "${artifactory_url}/artifactory/libs-release-local/tech5/Tech5-winSdk-Prod-v1.2.jar" -O "${work_dir}"/registration-client/target/lib/Tech5-winSdk-Prod-v1.2.jar
+wget "${artifactory_url}/artifactory/libs-release-local/tech5/Tech5-winSdk-Prod-v1.1.jar" -O "${work_dir}"/registration-client/target/lib/Tech5-winSdk-Prod-v1.1.jar
 wget "${artifactory_url}/artifactory/libs-release-local/tech5/client.jar" -O "${work_dir}"/registration-client/target/lib/client.jar
 wget "${artifactory_url}/artifactory/libs-release-local/tech5/common.jar" -O "${work_dir}"/registration-client/target/lib/common.jar
 wget "${artifactory_url}/artifactory/libs-release-local/tech5/irisSDK1_0.jar" -O "${work_dir}"/registration-client/target/lib/irisSDK1_0.jar
