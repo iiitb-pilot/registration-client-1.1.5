@@ -246,6 +246,7 @@ public class DaoConfig extends HibernateDaoConfig {
 	 */
 	private void createDatabase() throws Exception {
 		System.out.println(Float.parseFloat(df.format((20.0F - 3.0F))));
+		LOGGER.debug(LOGGER_CLASS_NAME, APPLICATION_NAME, APPLICATION_ID, "****** DATASOURCE dbPath : " + Float.parseFloat(df.format((20.0F - 3.0F))));
 		LOGGER.debug(LOGGER_CLASS_NAME, APPLICATION_NAME, APPLICATION_ID, "****** DATASOURCE dbPath : " + dbPath);
 		Connection connection = null;
 		try {
