@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.sql.DataSource;
@@ -91,8 +90,6 @@ public class DaoConfig extends HibernateDaoConfig {
 	private static PropertySourcesPlaceholderConfigurer ppc = null;
 
 	private DriverManagerDataSource driverManagerDataSource = null;
-	private static DecimalFormat df = new DecimalFormat("0.00");
-
 
 	static {
 		//TODO - Remove this in next release
@@ -245,8 +242,6 @@ public class DaoConfig extends HibernateDaoConfig {
 	 * 	-> shutdown database
 	 */
 	private void createDatabase() throws Exception {
-		System.out.println(Float.parseFloat(df.format((20.0F - 3.0F))));
-		LOGGER.debug(LOGGER_CLASS_NAME, APPLICATION_NAME, APPLICATION_ID, "****** DATASOURCE dbPath : " + Float.parseFloat(df.format((20.0F - 3.0F))));
 		LOGGER.debug(LOGGER_CLASS_NAME, APPLICATION_NAME, APPLICATION_ID, "****** DATASOURCE dbPath : " + dbPath);
 		Connection connection = null;
 		try {
