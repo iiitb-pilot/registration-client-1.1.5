@@ -729,30 +729,32 @@ public class DocumentScanController extends BaseController {
 		webcamSarxosServiceImpl.openWebCam(webcam, webcamSarxosServiceImpl.getWidth(),
 				webcamSarxosServiceImpl.getHeight());
 		scanPopUpViewController.setWebCamStream(true);
-		Thread streamer_thread = new Thread(new Runnable() {
+		scanPopUpViewController.setStreamPaused(false);
+		/* Thread streamer_thread = new Thread(new Runnable() {
 
 			public void run() {
+				try {
+					while (scanPopUpViewController.isWebCamStream()) {
 
-				while (scanPopUpViewController.isWebCamStream()) {
-
-					try {
-						if (!scanPopUpViewController.isStreamPaused()) {
-							scanPopUpViewController.getScanImage().setImage(
-									SwingFXUtils.toFXImage(webcamSarxosServiceImpl.captureImage(webcam), null));
+						try {
+							if (!scanPopUpViewController.isStreamPaused()) {
+								scanPopUpViewController.getScanImage().setImage(
+										SwingFXUtils.toFXImage(webcamSarxosServiceImpl.captureImage(webcam), null));
+							}
+						} catch (Throwable t) {
+							LOGGER.error(RegistrationConstants.DOCUMNET_SCAN_CONTROLLER, APPLICATION_NAME,
+									RegistrationConstants.APPLICATION_ID, ExceptionUtils.getStackTrace(t));
 						}
-					} catch (NullPointerException nullPointerException) {
-						LOGGER.error(RegistrationConstants.DOCUMNET_SCAN_CONTROLLER, APPLICATION_NAME,
-								RegistrationConstants.APPLICATION_ID,
-								ExceptionUtils.getStackTrace(nullPointerException));
-
-						scanPopUpViewController.setWebCamStream(false);
 					}
+				}finally {
+					scanPopUpViewController.stopStreaming();
 				}
+
 			}
 
 		});
 
-		streamer_thread.start();
+		streamer_thread.start();*/
 	}
 
 	/**

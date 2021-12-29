@@ -183,6 +183,7 @@ public class WebcamSarxosServiceImpl extends MosipWebcamServiceImpl {
 		if (webcam != null && webcam.isOpen()) {
 			jPanelWindow = null;
 			webcam.close();
+			webcam=null;
 		}
 	}
 
