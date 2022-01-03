@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import io.mosip.registration.controller.reg.*;
 import io.mosip.registration.exception.PreConditionCheckException;
 import io.mosip.registration.exception.RemapException;
 import io.mosip.registration.service.BaseService;
@@ -54,14 +55,6 @@ import io.mosip.registration.context.SessionContext;
 import io.mosip.registration.controller.device.BiometricsController;
 import io.mosip.registration.controller.device.ScanPopUpViewController;
 import io.mosip.registration.controller.eodapproval.RegistrationApprovalController;
-import io.mosip.registration.controller.reg.AlertController;
-import io.mosip.registration.controller.reg.DemographicDetailController;
-import io.mosip.registration.controller.reg.HeaderController;
-import io.mosip.registration.controller.reg.HomeController;
-import io.mosip.registration.controller.reg.PacketHandlerController;
-import io.mosip.registration.controller.reg.RegistrationPreviewController;
-import io.mosip.registration.controller.reg.UserOnboardParentController;
-import io.mosip.registration.controller.reg.Validations;
 import io.mosip.registration.dto.AuthenticationValidatorDTO;
 import io.mosip.registration.dto.RegistrationDTO;
 import io.mosip.registration.dto.ResponseDTO;
@@ -226,6 +219,9 @@ public class BaseController {
 
 	@Autowired
 	private AuthTokenUtilService authTokenUtilService;
+
+	@Autowired
+	private DocumentScanController documentScanController;
 
 	protected ApplicationContext applicationContext = ApplicationContext.getInstance();
 
@@ -533,35 +529,6 @@ public class BaseController {
 			tool.getStyleClass().add(RegistrationConstants.TOOLTIP);
 			label.setTooltip(tool);
 			//label.setVisible(true);
-		}
-	}
-
-	/**
-	 * Alert clear with specified context.
-	 *
-	 * @param parentPane the parent pane
-	 * @param id         the id
-	 * @param context    alert context
-	 */
-	protected void clearAlert(Pane parentPane, String id) {
-		String type = "#TYPE#";
-		if (id.contains(RegistrationConstants.ONTYPE)) {
-			id = id.replaceAll(RegistrationConstants.UNDER_SCORE + RegistrationConstants.ONTYPE,
-					RegistrationConstants.EMPTY);
-		}
-
-		String[] parts = id.split("__");
-		if (parts.length > 1 && parts[1].matches(RegistrationConstants.DTAE_MONTH_YEAR_REGEX)) {
-			id = parts[0] + "__" + RegistrationConstants.DOB;
-			parentPane = (Pane) parentPane.getParent().getParent();
-		}
-		Label label = ((Label) (parentPane.lookup(RegistrationConstants.HASH + id + RegistrationConstants.MESSAGE)));
-		if (label != null) {
-			if (!(label.isVisible() && id.equals(RegistrationConstants.DOB))) {
-				label.setText(null);
-			}
-
-			label.setTooltip(null);
 		}
 	}
 
@@ -898,17 +865,20 @@ public class BaseController {
 			// irisCaptureController.clearIrisData();
 			// faceCaptureController.clearPhoto(RegistrationConstants.APPLICANT_IMAGE);
 			guardianBiometricsController.clearCapturedBioData();
-		} else {
-			if (SessionContext.map().get(RegistrationConstants.REGISTRATION_DATA) != null) {
-				((RegistrationDTO) SessionContext.map().get(RegistrationConstants.REGISTRATION_DATA)).getBiometricDTO()
-						.setApplicantBiometricDTO(createBiometricInfoDTO());
-				((RegistrationDTO) SessionContext.map().get(RegistrationConstants.REGISTRATION_DATA)).getBiometricDTO()
-						.setIntroducerBiometricDTO(createBiometricInfoDTO());
+		}
 
-				// faceCaptureController.clearPhoto(RegistrationConstants.APPLICANT_IMAGE);
-				// faceCaptureController.clearPhoto(RegistrationConstants.EXCEPTION_IMAGE);
-				guardianBiometricsController.clearCapturedBioData();
-			}
+		if (SessionContext.map().get(RegistrationConstants.REGISTRATION_DATA) != null) {
+			RegistrationDTO registrationDTO = (RegistrationDTO) SessionContext.map().get(RegistrationConstants.REGISTRATION_DATA);
+			registrationDTO.getDocuments().clear();
+			registrationDTO.getBiometrics().clear();
+			registrationDTO.getBiometricExceptions().clear();
+			registrationDTO.getDemographics().clear();
+			SessionContext.map().remove(RegistrationConstants.REGISTRATION_DATA);
+			guardianBiometricsController.clearCapturedBioData();
+		}
+
+		if(documentScanController.getScannedPages() != null) {
+			documentScanController.getScannedPages().clear();
 		}
 	}
 
