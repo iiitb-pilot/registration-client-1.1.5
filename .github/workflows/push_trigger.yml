@@ -9,6 +9,7 @@ on:
       - master
       - 1.*
       - develop
+      - MEC-50
   
 jobs:
   
