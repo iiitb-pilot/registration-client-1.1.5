@@ -37,21 +37,15 @@ mkdir -p /sdkjars
 if [ "$reg_client_sdk_url" ]
 then
 	echo "Found thirdparty SDK"
-	wget "$reg_client_sdk_url"
-	/usr/bin/unzip /sdkDependency.zip
+	wget "$reg_client_sdk_url" -O sdkDependency.zip
+	mkdir sdkDependency
+	/usr/bin/unzip /sdkDependency.zip -d sdkDependency/
 	cp /sdkDependency/*.jar /sdkjars/
 else
 	echo "Downloading MOCK SDK..."
 	wget "${artifactory_url}/artifactory/libs-release-local/mock-sdk/1.1.5/mock-sdk.jar" -O /sdkjars/mock-sdk.jar
 fi
 
-
-wget "${artifactory_url}/artifactory/libs-release-local/tech5/ABISTech5FaceSDKAdapter.jar" -O "${work_dir}"/registration-client/target/lib/ABISTech5FaceSDKAdapter.jar
-wget "${artifactory_url}/artifactory/libs-release-local/tech5/Tech5-client-win-prodv1.4-20220117.jar" -O "${work_dir}"/registration-client/target/lib/Tech5-client-win-prodv1.4-20220117.jar
-wget "${artifactory_url}/artifactory/libs-release-local/tech5/client.jar" -O "${work_dir}"/registration-client/target/lib/client.jar
-wget "${artifactory_url}/artifactory/libs-release-local/tech5/common.jar" -O "${work_dir}"/registration-client/target/lib/common.jar
-wget "${artifactory_url}/artifactory/libs-release-local/tech5/irisSDK1_0.jar" -O "${work_dir}"/registration-client/target/lib/irisSDK1_0.jar
-wget "${artifactory_url}/artifactory/libs-release-local/tech5/morena_license.jar" -O "${work_dir}"/registration-client/target/lib/morena_license.jar
 
 #unzip Jre to be bundled
 /usr/bin/unzip /zulu11.41.23-ca-fx-jre11.0.8-win_x64.zip
