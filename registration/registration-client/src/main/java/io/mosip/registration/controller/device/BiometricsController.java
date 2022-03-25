@@ -1283,8 +1283,10 @@ public class BiometricsController extends BaseController /* implements Initializ
 
 					// validate local de-dup check
 					if ( !isExceptionPhoto(currentModality) && !isUserOnboardFlag ) {
+//						if (RegistrationConstants.ENABLE
+//								.equalsIgnoreCase(RegistrationConstants.DEDUPLICATION_ENABLE_FLAG)) {
 						if (RegistrationConstants.ENABLE
-								.equalsIgnoreCase(RegistrationConstants.DEDUPLICATION_ENABLE_FLAG)) {
+								.equalsIgnoreCase(io.mosip.registration.context.ApplicationContext.getStringValueFromApplicationMap(RegistrationConstants.DEDUPLICATION_ENABLE_FLAG))) {
 							LOGGER.info(LOG_REG_BIOMETRIC_CONTROLLER, APPLICATION_NAME, APPLICATION_ID,
 									"Doing local de-dup validation");
 							boolean isMatchedWithLocalBiometrics = identifyInLocalGallery(mdsCapturedBiometricsList,
