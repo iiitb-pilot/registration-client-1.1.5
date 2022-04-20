@@ -41,6 +41,10 @@ then
 	mkdir sdkDependency
 	/usr/bin/unzip /sdkDependency.zip -d sdkDependency/
 	cp /sdkDependency/*.jar /sdkjars/
+
+	# TODO : Below two lines to be removed while production Deployment
+		echo "Downloading MOCK SDK..."
+  	wget "${artifactory_url}/artifactory/libs-release-local/mock-sdk/1.1.5/mock-sdk.jar" -O /sdkjars/mock-sdk.jar
 else
 	echo "Downloading MOCK SDK..."
 	wget "${artifactory_url}/artifactory/libs-release-local/mock-sdk/1.1.5/mock-sdk.jar" -O /sdkjars/mock-sdk.jar
